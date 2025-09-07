@@ -1,0 +1,50 @@
+Fake News Detection - Metrics Report
+Generated: 2025-08-20 13:03:33
+
+Dataset: data/fake_news.csv
+Rows: 44898
+Classes: ['0', '1']
+
+Model: NaiveBayes
+Accuracy:  0.9650
+Precision: 0.9640
+Recall:    0.9627
+F1-score:  0.9633
+Confusion matrix:
+[[4542  154]
+ [ 160 4124]]
+
+Classification report:
+              precision    recall  f1-score   support
+
+           0       0.97      0.97      0.97      4696
+           1       0.96      0.96      0.96      4284
+
+    accuracy                           0.97      8980
+   macro avg       0.96      0.96      0.96      8980
+weighted avg       0.97      0.97      0.97      8980
+
+------------------------------------------------------------
+
+Model: LogisticRegression
+Accuracy:  0.9924
+Precision: 0.9891
+Recall:    0.9951
+F1-score:  0.9921
+Confusion matrix:
+[[4649   47]
+ [  21 4263]]
+
+Classification report:
+              precision    recall  f1-score   support
+
+           0       1.00      0.99      0.99      4696
+           1       0.99      1.00      0.99      4284
+
+    accuracy                           0.99      8980
+   macro avg       0.99      0.99      0.99      8980
+weighted avg       0.99      0.99      0.99      8980
+
+------------------------------------------------------------
+
+Best model by F1-score: LogisticRegression (0.9921)
