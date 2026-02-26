@@ -1,71 +1,121 @@
-# 📰 Fake News Detection (Machine Learning)
+# 🧠 Advanced Fake News Detection System
 
-A beginner-friendly, end-to-end project to classify news as **Fake** or **Real** using machine learning.  
-It trains two models (Naive Bayes and Logistic Regression), evaluates them, saves the best pipeline with pickle, and includes a simple **Streamlit** app for live predictions.
+Production-style fake news detection pipeline with model selection, hyperparameter optimization, explainability outputs, and deployment-ready artifacts.
+
+## 🚀 What Makes This Project Advanced
+
+- **Multi-model benchmarking** across four strong linear baselines:
+  - Complement Naive Bayes
+  - Logistic Regression
+  - Calibrated Linear SVM (probability-enabled)
+  - Passive Aggressive Classifier
+- **Automated hyperparameter optimization** with `RandomizedSearchCV`
+- **Cross-validation driven model selection** (not single-run only)
+- **Probability calibration** for SVM-based predictions
+- **Interpretability outputs** with top weighted terms per class
+- **Dual reports**:
+  - `reports/metrics.txt` (human-readable)
+  - `reports/metrics.json` (machine-readable)
+- **Reusable serialized artifact** including pipeline, metrics, label encoder, and metadata
+- **CLI inference utility** (`predict.py`) for quick testing and integration
+
+---
 
 ## 📂 Project Structure
-```
+
+```bash
 fake-news-ml-project/
-├── data/                 # Put your Kaggle CSV here (with text + label)
-├── models/               # Saved model(s)
-├── reports/              # Evaluation reports
-├── app.py                # Streamlit app
-├── train_fake_news.py    # Training script
+├── app.py
+├── train_fake_news.py      # Advanced training + model search
+├── predict.py              # CLI inference
+├── preprocessor.py         # Sklearn-compatible text cleaning transformer
+├── models/
+│   └── best_model.pkl
+├── reports/
+│   ├── metrics.txt
+│   └── metrics.json
 └── requirements.txt
 ```
 
-## ✅ Requirements
-- Python 3.8+
-- `pip install -r requirements.txt`
+---
 
-## 📥 Dataset
-Use any Kaggle Fake News dataset in CSV format that includes a **text** column and a **label** column.  
-If your dataset uses different column names (e.g., `content`, `target`, `class`, etc.), you can pass them via command-line flags.
+## ⚙️ Installation
 
-> Example datasets on Kaggle: "Fake and real news dataset", "Fake News", etc.
-
-## 🚀 Train the Models
-1. Place your dataset at `data/fake_news.csv` (or any path you like).
-2. Run the training script:
-   ```bash
-   python train_fake_news.py --data_path data/fake_news.csv
-   ```
-
-If your dataset has different columns:
 ```bash
-python train_fake_news.py --data_path data/your.csv --text_column content --label_column label
+pip install -r requirements.txt
 ```
 
-If you also have a title column you'd like to include:
+Python 3.8+ recommended.
+
+---
+
+## 📥 Dataset Requirements
+
+Use a CSV dataset with text and label fields.
+
+Default expected columns:
+- `text`
+- `label`
+
+If your dataset uses different names, pass them through CLI arguments.
+
+---
+
+## 🏋️ Train the Advanced System
+
 ```bash
-python train_fake_news.py --data_path data/your.csv --text_column text --label_column label --title_column title
+python train_fake_news.py --data_path data/fake_news.csv
 ```
 
-This will:
-- preprocess text (lowercase, punctuation removal, stopwords, lemmatization)
-- vectorize with TF‑IDF (unigrams + bigrams)
-- train **Naive Bayes** and **Logistic Regression**
-- evaluate accuracy, precision, recall, F1-score, confusion matrix
-- save the **best** pipeline (including preprocessing + TF‑IDF + classifier + label encoder) to `models/best_model.pkl`
-- write a human-readable report to `reports/metrics.txt`
+Optional arguments:
 
-## 🖥️ Run the Streamlit App
-After training completes:
+```bash
+python train_fake_news.py \
+  --data_path data/fake_news.csv \
+  --text_column content \
+  --label_column target \
+  --title_column title \
+  --cv_folds 5 \
+  --search_iter 20 \
+  --top_k_terms 30
+```
+
+### Training Outputs
+
+- `models/best_model.pkl`
+- `reports/metrics.txt`
+- `reports/metrics.json`
+
+---
+
+## 🔍 CLI Inference
+
+```bash
+python predict.py --model_path models/best_model.pkl --text "Breaking: scientists discover..."
+```
+
+Output includes:
+- Predicted class
+- Raw label
+- Confidence distribution (if probability is available)
+
+---
+
+## 🖥️ Streamlit App
+
 ```bash
 streamlit run app.py
 ```
-Then paste any news text in the app to get a **Fake/Real** prediction with confidence.
 
-## 🧠 How it Works (Short Version)
-- **Preprocessing:** lowercase → remove punctuation & non-letters → remove English stopwords → lemmatize with NLTK.
-- **Features:** TF‑IDF (1–2 grams, 50k max features).
-- **Models:** Multinomial Naive Bayes and Logistic Regression.
-- **Selection:** Pick the one with the highest F1-score on the test set.
-- **Serving:** The saved pipeline performs the same preprocessing at inference, so the Streamlit app just loads and predicts.
+The app loads `models/best_model.pkl` and performs live predictions.
 
-## ✏️ Notes
-- If NLTK resources are missing, scripts will download them automatically on first run.
-- If your dataset has imbalanced classes, consider experimenting with `class_weight='balanced'` in Logistic Regression or tuning TF‑IDF/thresholds.
-- You can extend this project with cross-validation, hyperparameter search, or more models (SVM, LinearSVC, etc.).
+---
 
-Happy learning! 🎉
+## 🧪 Suggested Next Enhancements
+
+- Add transformer embeddings (BERT/RoBERTa) and compare with TF-IDF stack
+- Add drift detection against incoming production data
+- Build REST API (FastAPI) + Docker deployment
+- Add experiment tracking (MLflow/W&B)
+- Add threshold tuning based on business precision/recall targets
+
